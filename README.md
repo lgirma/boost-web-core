@@ -27,7 +27,7 @@ src/
 Contents of `security.ts` file:
 
 ```
-import {DefaultSecurityService, SecurityService} from '@boots-web/core'
+import {DefaultSecurityService, SecurityService} from '@boost-web/core'
 
 export default DefaultSecurityService as SecurityService;
 ```
@@ -37,5 +37,5 @@ export default DefaultSecurityService as SecurityService;
 Import a dependency from the container as:
 
 ```
-import _security from 'container/security';
+import _securityService from 'container/security';
 ```

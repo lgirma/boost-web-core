@@ -5,10 +5,9 @@
   "exclude": [
     "node_modules/*",
     "__sapper__/*",
-    "public/*",
+    "dist/*",
     "tests"
   ],
-  "display": "Svelte",
   "compilerOptions": {
     "baseUrl": "src",
     "resolveJsonModule": true,
@@ -26,13 +25,10 @@
       enable source maps by default.
      */
     "sourceMap": true,
-    /** Requests the runtime types from the svelte modules by default. Needed for TS files or else you get errors. */
-    "types": [
-      "svelte"
-    ],
     "strict": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "rootDir": "src"
   }
 }

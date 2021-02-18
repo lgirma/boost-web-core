@@ -1,9 +1,9 @@
-import {AppSecurityConfig, User} from "./Models";
-import {Configurable} from "config";
+import {User} from "./Models";
+import {AppConfig, Configurable} from "config";
 import {Initilizable} from "common";
 import _config from "container/config";
 
-export interface SecurityService {
+export interface SecurityService extends Configurable<SecurityConfig> {
     setUser(user: User, goHome?);
     isUserAuthenticated(): boolean;
     getCurrentUser(): User;
@@ -16,21 +16,28 @@ export interface SecurityService {
     init(isSecure?: boolean): void;
 }
 
-export type DefaultSecurityServiceType = SecurityService & Configurable<AppSecurityConfig> & Initilizable
+export type DefaultSecurityServiceType = SecurityService & Initilizable
+
+export interface SecurityConfig extends AppConfig {
+    ROLE_BUNDLES: { [key: string]: string }
+    ROLES: { [key: string]: string }
+    BUNDLE_ROLES: { [key: string]: string; }
+    AuthPageUrl: string
+}
 
 export const DefaultSecurityService = {
 
-    userStore: null as User,
-
-    defaultConfig() {
-        return {
-            security: {
-                BUNDLE_ROLES: {},
-                ROLE_BUNDLES: {},
-                ROLES: {}
-            }
-        };
+    _securityConfig: _config.get<SecurityConfig>('security', {
+        BUNDLE_ROLES: {},
+        ROLE_BUNDLES: {},
+        ROLES: {},
+        AuthPageUrl: '/auth'
+    }),
+    getConfig(): SecurityConfig {
+        return this._securityConfig;
     },
+
+    userStore: null as User,
     getCurrentPageBundle(): string {
         return window.location.pathname.replace('/', '').replace('.html', '');
     },
@@ -40,15 +47,15 @@ export const DefaultSecurityService = {
     },
 
     getCurrentUserRole(): string {
-        return _config.get<AppSecurityConfig>('security').BUNDLE_ROLES[this.getCurrentPageBundle()];
+        return this._securityConfig.BUNDLE_ROLES[this.getCurrentPageBundle()];
     },
 
     getRoleRootUrl(role: string): string {
-        return _config.get<AppSecurityConfig>('security').ROLE_BUNDLES[role];
+        return this._securityConfig.ROLE_BUNDLES[role];
     },
 
     getSecureBundles(): string[] {
-        return Object.keys(_config.get<AppSecurityConfig>('security').ROLES).map(r => _config.get<AppSecurityConfig>('security').ROLE_BUNDLES[r]);
+        return Object.keys(this._securityConfig.ROLES).map(r => this._securityConfig.ROLE_BUNDLES[r]);
     },
 
     gotoRoleHome(roles: string[]) {
@@ -81,7 +88,7 @@ export const DefaultSecurityService = {
         const hasUserLoggedIn = this.isUserAuthenticated();
 
         if (isSecure && !hasUserLoggedIn) {
-            window.location.href = '/auth';
+            window.location.href = this._securityConfig.AuthPageUrl;
             return null;
         }
         if (!isSecure && hasUserLoggedIn) {
@@ -92,7 +99,7 @@ export const DefaultSecurityService = {
             // check if role is denied
             const bundle = this.getCurrentPageBundle();
             const secureBundles = this.getSecureBundles();
-            if (secureBundles.indexOf(bundle) > -1 && usr.roles.find(r => bundle === _config.get<AppSecurityConfig>('security').ROLE_BUNDLES[r]) == null) {
+            if (secureBundles.indexOf(bundle) > -1 && usr.roles.find(r => bundle === this._securityConfig.ROLE_BUNDLES[r]) == null) {
                 this.gotoUserHome(usr);
                 return null;
             }

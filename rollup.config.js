@@ -9,6 +9,7 @@ import json from 'rollup-plugin-json';
 import typescript from '@rollup/plugin-typescript';
 import sirv from 'sirv-cli';
 import pkg from './package.json';
+import path from 'path';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -22,7 +23,9 @@ const plugins = [
     commonjs(),
     typescript({
         sourceMap: !production,
-        inlineSources: !production
+        inlineSources: !production,
+        declaration: true,
+        declarationDir: 'dist/types'
     }),
     !production && livereload('dist'),
     !production && sirv('dist', { port: 6060 }),
@@ -30,13 +33,24 @@ const plugins = [
     production && gzipPlugin()
 ];
 
+const externals = [
+    'container/config',
+    'container/security',
+    'container/auth',
+    'container/busybar',
+    'container/http',
+    'container/i18n',
+    'container/application'
+];
+
 export default [
-    {
+    /*{
         input: './src/index.ts',
         output: {
             sourcemap: !production,
             format: 'umd',
-            name: 'boostWeb',
+            name: 'boostWebCore',
+            dir: path.dirname(pkg.browser),
             file: `${pkg.browser}`
         },
         plugins: [
@@ -44,33 +58,33 @@ export default [
             includePaths({ paths: ["src"] })
         ],
         external: ['container']
-    },
+    },*/
     {
         input: './src/index.ts',
-        output: [
-            { 
-                file: `${pkg.main}`,
-                format: 'cjs',
-                sourcemap: !production
-            },
-            {
-                file: `${pkg.module}`,
-                format: 'es',
-                sourcemap: !production
-            }
-        ],
+        output: {
+            dir: path.dirname(pkg.module),
+            //file: pkg.module,
+            format: 'es',
+            sourcemap: !production,
+        },
         plugins: [
             ...plugins,
             includePaths({ paths: ["src"] })
         ],
-        external: [
-            'container/config',
-            'container/security',
-            'container/auth',
-            'container/busybar',
-            'container/http',
-            'container/i18n',
-            'container/application'
-        ]
-    }
+        external: externals
+    },
+    /*{
+        input: './src/index.ts',
+        output: {
+            dir: path.dirname(pkg.main),
+            file: pkg.main,
+            format: 'cjs',
+            sourcemap: !production
+        },
+        plugins: [
+            ...plugins,
+            includePaths({ paths: ["src"] })
+        ],
+        external: externals
+    }*/
 ]

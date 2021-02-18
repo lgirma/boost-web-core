@@ -3,15 +3,20 @@ export interface AppConfig {
 }
 
 export interface ConfigService {
-    get<T>(section: string): T;
+    get<T>(section: string, defaultValue?: T): T;
     append(configObject);
 }
 
 export class DefaultConfigService implements ConfigService {
     private _configObject : AppConfig = {}
 
-    get<T>(section: string): T {
-        return this._configObject[section]
+    get<T>(section: string, defaultValue = {}): T {
+        let result = this._configObject[section];
+        result = {
+            ...result,
+            ...defaultValue
+        }
+        return result;
     }
 
     append(configObject) {
@@ -26,5 +31,5 @@ export class DefaultConfigService implements ConfigService {
 }
 
 export interface Configurable<T extends AppConfig> {
-    defaultConfig() : {[key: string]: T};
+    getConfig(): T;
 }
