@@ -1,13 +1,13 @@
 import {AppInitOptions, AppService} from "./AppService";
-import {SvelteComponent} from "svelte";
 
 export interface SvelteAppInitOptions extends AppInitOptions {
-    rootComponent
+    rootComponent,
+    mountOn: HTMLElement
 }
 
 export const SvelteApp: AppService = {
-    createApp(setup, options: SvelteAppInitOptions) {
-        let targetElt = document.body;
+    createApp(options: SvelteAppInitOptions) {
+        let targetElt = options.mountOn ?? document.body;
         return new options.rootComponent({
             target: targetElt
         });

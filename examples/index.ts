@@ -1,5 +1,6 @@
-import {SvelteApp} from "application/AppService.Svelte";
-import {setup} from "./setup";
+import _app from "container/application";
 import App from './App.svelte'
 
-export default SvelteApp.createApp(setup, App);
+export default _app.createApp({
+    rootComponent: App
+});

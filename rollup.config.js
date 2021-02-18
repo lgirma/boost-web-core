@@ -1,14 +1,11 @@
-import svelte from 'rollup-plugin-svelte';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import includePaths from 'rollup-plugin-includepaths';
 import css from 'rollup-plugin-css-only';
-//import htmlTemplate from 'rollup-plugin-generate-html-template';
 import gzipPlugin from 'rollup-plugin-gzip';
 import json from 'rollup-plugin-json';
-import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
 import sirv from 'sirv-cli';
 import pkg from './package.json';
@@ -16,10 +13,6 @@ import pkg from './package.json';
 const production = !process.env.ROLLUP_WATCH;
 
 const plugins = [
-    svelte({
-        dev: !production,
-        preprocess: sveltePreprocess(),
-    }),
     css({ output: `bundle${production ? '.min' : ''}.css` }),
     json({
         compact: true,
@@ -50,7 +43,7 @@ export default [
             ...plugins,
             includePaths({ paths: ["src"] })
         ],
-        external: ['topbar', 'axios']
+        external: ['container']
     },
     {
         input: './src/index.ts',
@@ -70,6 +63,14 @@ export default [
             ...plugins,
             includePaths({ paths: ["src"] })
         ],
-        external: ['topbar', 'axios']
+        external: [
+            'container/config',
+            'container/security',
+            'container/auth',
+            'container/busybar',
+            'container/http',
+            'container/i18n',
+            'container/application'
+        ]
     }
 ]

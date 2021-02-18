@@ -1,1 +1,3 @@
-export default {}
+export interface i18nService {
+
+}
