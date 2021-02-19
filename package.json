@@ -1,6 +1,6 @@
 {
   "name": "@boost-web/core",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Web development utilities base",
   "main": "dist/boost-web-core.cjs.js",
   "module": "dist/index.js",
@@ -15,6 +15,7 @@
   },
   "author": "Lee",
   "license": "ISC",
+  "repository": "https://github.com/lgirma/boost-web-core",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^16.0.0",
     "@rollup/plugin-node-resolve": "^10.0.0",
