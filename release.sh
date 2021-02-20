@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 echo "Tagging a release..."
 #get highest tag number
-VERSION=`git describe --abbrev=0 --tags`
+VERSION=`node -e "console.log(require('./package.json').version);"`
 
 #replace . with space so can split into an array
 VERSION_BITS=(${VERSION//./ })
@@ -20,14 +20,15 @@ NEEDS_TAG=`git describe --contains ${GIT_COMMIT} 2>/dev/null`
 
 #only tag if no tag already
 if [[ -z "$NEEDS_TAG" ]]; then
-    git tag ${NEW_TAG}
+    npm version ${NEW_TAG}
     echo "Tagged with $NEW_TAG"
     git push --tags
 else
-    NEW_TAG="$VERSION"
-    echo "Already a tag on this commit"
+    echo "FAILED: No change for a release. (There is already a tag on the last commit)"
+    exit 1
 fi
 
 echo "Publishing to npm..."
 rm -rf ./dist/*
 npm run build
+npm publish
