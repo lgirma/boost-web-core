@@ -31,4 +31,5 @@ fi
 echo "Publishing to npm..."
 rm -rf ./dist/*
 npm run build
+npm run typedecs
 npm publish

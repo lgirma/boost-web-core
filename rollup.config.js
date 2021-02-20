@@ -73,7 +73,7 @@ export default [
         ],
         external: externals
     },
-    {
+    /*{
         input: './src/index.ts',
         output: {
             file: pkg.main,
@@ -88,5 +88,5 @@ export default [
             }),
         ],
         external: externals
-    }
+    }*/
 ]

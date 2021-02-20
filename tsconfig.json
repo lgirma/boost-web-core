@@ -13,6 +13,7 @@
     "resolveJsonModule": true,
     "importsNotUsedAsValues": "remove",
     "moduleResolution": "node",
+    "module": "esnext",
     "target": "es2017",
     /** 
       Svelte Preprocess cannot figure out whether you have a value or a type, so tell TypeScript
@@ -29,6 +30,8 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "rootDir": "src"
+    "rootDir": "src",
+    "declaration": true,
+    "declarationDir": "dist/types"
   }
 }
