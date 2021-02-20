@@ -3,7 +3,7 @@
   "version": "1.10.0",
   "description": "Web development utilities base",
   "module": "dist/index.esm.js",
-  "main": "dist/index.csj.js",
+  "main": "dist/index.cjs.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
     "test": "ts-mocha -p ./tsconfig.tests.json 'tests/**/*.ts'",
