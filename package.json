@@ -1,6 +1,6 @@
 {
   "name": "@boost-web/core",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "description": "Web development utilities base",
   "module": "dist/index.esm.js",
   "main": "dist/index.cjs.js",
