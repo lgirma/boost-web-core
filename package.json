@@ -1,6 +1,6 @@
 {
   "name": "@boost-web/core",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Web development utilities base",
   "module": "dist/index.js",
   "types": "dist/types/index.d.ts",
@@ -44,6 +44,7 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "package.json"
   ]
 }
