@@ -65,7 +65,7 @@ export default [
             dir: path.dirname(pkg.module),
             //file: pkg.module,
             format: 'es',
-            sourcemap: !production,
+            sourcemap: !production
         },
         plugins: [
             ...plugins,
