@@ -1,10 +1,10 @@
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
-import { terser } from 'rollup-plugin-terser';
+//import { terser } from 'rollup-plugin-terser';
 import includePaths from 'rollup-plugin-includepaths';
 import css from 'rollup-plugin-css-only';
-import gzipPlugin from 'rollup-plugin-gzip';
+//import gzipPlugin from 'rollup-plugin-gzip';
 import json from 'rollup-plugin-json';
 import typescript from '@rollup/plugin-typescript';
 import sirv from 'sirv-cli';
@@ -23,8 +23,8 @@ const plugins = [
     commonjs(),
     !production && livereload('dist'),
     !production && sirv('dist', { port: 6060 }),
-    production && terser(),
-    production && gzipPlugin(),
+    //production && terser(),
+    //production && gzipPlugin(),
     includePaths({ paths: ["src"] })
 ];
 
