@@ -1,19 +1,19 @@
 {
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "tests/**/*"
   ],
   "exclude": [
     "node_modules/*",
     "__sapper__/*",
-    "dist/*",
-    "tests"
+    "dist/*"
   ],
   "compilerOptions": {
     "baseUrl": "src",
     "resolveJsonModule": true,
     "importsNotUsedAsValues": "remove",
     "moduleResolution": "node",
-    "module": "esnext",
+    "module": "commonjs",
     "target": "es2017",
     "isolatedModules": true,
     "sourceMap": true,
@@ -21,8 +21,6 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "rootDir": "src",
-    "declaration": true,
-    "declarationDir": "dist/types"
+    "rootDir": "src"
   }
 }

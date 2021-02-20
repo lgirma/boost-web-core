@@ -27,9 +27,9 @@ else
     echo "FAILED: No change for a release. (There is already a tag on the last commit)"
     exit 1
 fi
-
-echo "Publishing to npm..."
 rm -rf ./dist/*
 npm run build
 npm run typedecs
+
+echo "Publishing to npm..."
 npm publish

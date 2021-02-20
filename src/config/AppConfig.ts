@@ -10,11 +10,14 @@ export interface ConfigService {
 export class DefaultConfigService implements ConfigService {
     private _configObject : AppConfig = {}
 
-    get<T>(sectionName: string, defaultValue = {}): T {
+    get<T>(sectionName: string, defaultValue: T = null as any): T {
         let result = this._configObject[sectionName];
-        result = {
-            ...result,
-            ...defaultValue
+        if (defaultValue != null) {
+            result = {
+                ...defaultValue,
+                ...result,
+            }
+            this._configObject[sectionName] = result;
         }
         return result;
     }
