@@ -21,16 +21,11 @@ const plugins = [
     }),
     resolve({browser: true}),
     commonjs(),
-    typescript({
-        sourceMap: !production,
-        inlineSources: !production,
-        declaration: true,
-        declarationDir: 'dist/types'
-    }),
     !production && livereload('dist'),
     !production && sirv('dist', { port: 6060 }),
     production && terser(),
-    production && gzipPlugin()
+    production && gzipPlugin(),
+    includePaths({ paths: ["src"] })
 ];
 
 const externals = [
@@ -69,22 +64,29 @@ export default [
         },
         plugins: [
             ...plugins,
-            includePaths({ paths: ["src"] })
+            typescript({
+                sourceMap: !production,
+                inlineSources: !production,
+                declaration: true,
+                declarationDir: 'dist/types'
+            }),
         ],
         external: externals
     },
-    /*{
+    {
         input: './src/index.ts',
         output: {
-            dir: path.dirname(pkg.main),
             file: pkg.main,
             format: 'cjs',
             sourcemap: !production
         },
         plugins: [
             ...plugins,
-            includePaths({ paths: ["src"] })
+            typescript({
+                sourceMap: !production,
+                inlineSources: !production,
+            }),
         ],
         external: externals
-    }*/
+    }
 ]
