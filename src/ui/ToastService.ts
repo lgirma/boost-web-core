@@ -2,7 +2,7 @@ import {MessageType} from "./MessageType";
 import {ScreenPosition} from "./ScreenPosition";
 import _i18n from 'container/i18n';
 
-const _ = _i18n._;
+const _ = k => _i18n._(k);
 
 export abstract class ToastService {
     abstract show(options?: ToastMessage);
