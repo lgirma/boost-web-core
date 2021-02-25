@@ -7,30 +7,31 @@ export interface ConfigService {
     append(configObject);
 }
 
-export class DefaultConfigService implements ConfigService {
-    private _configObject : AppConfig = {}
-
-    get<T>(sectionName: string, defaultValue: T = null as any): T {
-        let result = this._configObject[sectionName];
-        if (defaultValue != null) {
-            result = {
-                ...defaultValue,
-                ...result,
+export function GetDefaultConfigService(startWith: any = {}) : ConfigService {
+    let result = {
+        _configObject: {} as AppConfig,
+        get<T>(sectionName: string, defaultValue: T = null as any): T {
+            let result = this._configObject[sectionName];
+            if (defaultValue != null) {
+                result = {
+                    ...defaultValue,
+                    ...result,
+                }
+                this._configObject[sectionName] = result;
             }
-            this._configObject[sectionName] = result;
+            return result;
+        },
+
+        append(configObject) {
+            Object.keys(configObject)
+                .forEach(configKey => this._configObject[configKey] = configObject[configKey])
         }
-        return result;
-    }
+    };
 
-    append(configObject) {
-        Object.keys(configObject)
-            .forEach(configKey => this._configObject[configKey] = configObject[configKey])
-    }
+    if (startWith != null)
+        result._configObject = startWith;
 
-    constructor(startWith = {}) {
-        if (startWith != null)
-            this._configObject = startWith;
-    }
+    return result;
 }
 
 export interface Configurable<T extends AppConfig> {

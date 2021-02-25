@@ -1,3 +1,3 @@
-import {ConfigService, DefaultConfigService} from "config";
+import {ConfigService, GetDefaultConfigService} from "config";
 
-export default new DefaultConfigService() as ConfigService;
+export default GetDefaultConfigService() as ConfigService;

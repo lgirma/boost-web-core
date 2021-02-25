@@ -1,13 +1,13 @@
 import { describe } from 'mocha';
 import { expect } from 'chai';
 
-import {DefaultConfigService} from "../src/config";
+import {GetDefaultConfigService} from "../src/config";
 
 type MySectionConfigType = { name?: string, version?: number }
 
 describe('Default config service tests', () => {
 
-    const _configService = new DefaultConfigService({
+    const _configService = GetDefaultConfigService({
         mySection: {
             version: 1
         }
