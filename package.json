@@ -6,11 +6,13 @@
   "main": "dist/index.cjs.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
     "test": "ts-mocha -p ./tsconfig.tests.json 'tests/**/*.ts'",
-    "build": "node ./esbuild.config.js",
-    "typedecs": "tsc --emitDeclarationOnly",
+    "buildEsbuild": "node ./esbuild.config.js",
+    "typedecs": "tsc -p tsconfig.typedec.json --emitDeclarationOnly",
     "release": "bash ./release.sh",
-    "dev": "cross-env WATCH=1 node ./esbuild.config.js",
+    "devEsbuild": "cross-env WATCH=1 node ./esbuild.config.js",
     "start": "sirv dist",
     "validate": "svelte-check"
   },
@@ -18,6 +20,9 @@
   "license": "ISC",
   "repository": "https://github.com/lgirma/boost-web-core",
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^17.1.0",
+    "@rollup/plugin-node-resolve": "^11.2.0",
+    "@rollup/plugin-typescript": "^8.2.0",
     "@types/chai": "^4.2.15",
     "@types/mocha": "^8.2.0",
     "@types/node": "^14.14.28",
