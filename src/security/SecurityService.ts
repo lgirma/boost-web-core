@@ -22,7 +22,8 @@ export interface SecurityConfig extends AppConfig {
     ROLE_BUNDLES: { [key: string]: string }
     ROLES: { [key: string]: string }
     BUNDLE_ROLES: { [key: string]: string; }
-    AuthPageUrl: string
+    AuthPageUrl: string,
+    LogoutUrl: string
 }
 
 export const DefaultSecurityService = {
@@ -31,7 +32,8 @@ export const DefaultSecurityService = {
         BUNDLE_ROLES: {},
         ROLE_BUNDLES: {},
         ROLES: {},
-        AuthPageUrl: '/auth'
+        AuthPageUrl: '/auth',
+        LogoutUrl: '/logout'
     }),
     getConfig(): SecurityConfig {
         return this._securityConfig;
