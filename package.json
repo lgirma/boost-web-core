@@ -42,5 +42,8 @@
     "README.md",
     "LICENSE",
     "package.json"
-  ]
+  ],
+  "publishConfig": {
+    "registry": "http://localhost:4873"
+  }
 }
