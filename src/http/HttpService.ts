@@ -48,7 +48,7 @@ export const FetchHttpService : HttpService = {
 
         try {
             _busyBar.start();
-            const response = await fetch(`${this._httpConfig.ApiUrl}/url`, config);
+            const response = await fetch(`${this._httpConfig.ApiUrl}/${url}`, config);
             _busyBar.stop();
             if (!response.ok) {
                 let authHeader = response.headers.get('WWW-Authenticate')
