@@ -6,5 +6,5 @@ export interface BusyBarOptions {
 export interface BusyBarService {
     start(bar?)
     stop(bar?)
-    createBar(options: BusyBarOptions): any
+    createBar(options?: BusyBarOptions): any
 }
