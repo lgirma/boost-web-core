@@ -56,13 +56,13 @@ export class FormService {
             config.columns = 1;
 
         Object.entries(config.forObject).forEach(_ => {
-            let fieldId = _ + '';
+            let fieldId = _[0];
             let fieldValue = config.forObject[fieldId];
 
             config.formConfig[fieldId] = {
-                scale: 1,
-                readonly: false,
-                showLabel: true,
+                scale: config.scale,
+                readonly: config.readonly,
+                showLabel: config.showLabel,
                 icon: null,
                 helpText: '',
                 validationResult: {
