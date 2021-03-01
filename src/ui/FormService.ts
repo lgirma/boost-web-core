@@ -10,8 +10,7 @@ export interface FormConfigBase {
     scale?: number
     id?: string
     readonly?: boolean
-    showLabel?: boolean,
-    columns?: number
+    showLabel?: boolean
 }
 
 export interface FieldConfigBase extends FormConfigBase {
@@ -26,8 +25,9 @@ export interface FieldConfigBase extends FormConfigBase {
 }
 
 export interface WebForm extends FormConfigBase {
+    columns?: number
     forObject: any,
-    formConfig: {
+    formConfig?: {
         [key: string]: FieldConfigBase;
     }
 }
@@ -57,11 +57,12 @@ export class FormService {
 
         Object.entries(config.forObject).forEach(_ => {
             let fieldId = _ + '';
+            let fieldValue = config.forObject[fieldId];
+
             config.formConfig[fieldId] = {
                 scale: 1,
                 readonly: false,
                 showLabel: true,
-                type: 'text',
                 icon: null,
                 helpText: '',
                 validationResult: {
@@ -74,9 +75,31 @@ export class FormService {
                 label: humanize(fieldId),
                 ...config.formConfig[fieldId]
             }
+            if (config.formConfig[fieldId].type == null)
+                config.formConfig[fieldId].type = this.guessType(fieldId, fieldValue);
         });
 
         return config;
+    }
+
+    guessType(fieldId, fieldValue): FormFieldType {
+        if (fieldId === 'password')
+            return 'password';
+        if (fieldId === 'email')
+            return 'email';
+        if (fieldValue == null)
+            return 'text';
+
+        const jsType = typeof(fieldValue);
+
+        if (jsType === 'boolean')
+            return 'checkbox';
+        if (jsType === 'string')
+            return 'text';
+        if (jsType === 'number')
+            return 'number';
+
+        return 'text';
     }
 
     async validateForm(form: WebForm) : Promise<FormValidationResult> {
