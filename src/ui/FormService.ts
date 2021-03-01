@@ -21,7 +21,7 @@ export interface FieldConfigBase extends FormConfigBase {
     label?: string
     placeholder?: string
     validationResult?: FieldValidationResult,
-    options?: any
+    customOptions?: any
 }
 
 export interface WebForm extends FormConfigBase {
