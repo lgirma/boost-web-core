@@ -19,11 +19,11 @@ export interface SecurityService extends Configurable<SecurityConfig> {
 export type DefaultSecurityServiceType = SecurityService & Initilizable
 
 export interface SecurityConfig extends AppConfig {
-    ROLE_BUNDLES: { [key: string]: string }
-    ROLES: { [key: string]: string }
-    BUNDLE_ROLES: { [key: string]: string; }
-    AuthPageUrl: string,
-    LogoutUrl: string
+    ROLE_BUNDLES?: { [key: string]: string }
+    ROLES?: { [key: string]: string }
+    BUNDLE_ROLES?: { [key: string]: string; }
+    AuthPageUrl?: string,
+    LogoutUrl?: string
 }
 
 export const DefaultSecurityService = {

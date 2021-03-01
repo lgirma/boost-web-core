@@ -7,6 +7,10 @@ export interface ConfigService {
     append(configObject);
 }
 
+export function configFor<T>(val: T): T {
+    return val;
+}
+
 export function GetDefaultConfigService(startWith: any = {}) : ConfigService {
     let result = {
         _configObject: {} as AppConfig,

@@ -1,7 +1,5 @@
-import {AppConfig} from "config/AppConfig";
-
 export interface LoginModel {
-    email: string,
+    userId: string,
     password: string
 }
 

@@ -6,10 +6,14 @@ import _securityService from 'container/security';
 
 export type HttpMethod = 'get' | 'post' | 'put' | 'delete' | 'options' | 'head' | 'patch';
 
+/**
+ * Used to configure http module.
+ * Use http key in configuration
+ */
 export interface HttpConfig extends AppConfig {
-    ApiUrl: string
-    WebUrl: string
-    MaxUploadFileSize: number
+    ApiUrl?: string
+    WebUrl?: string
+    MaxUploadFileSize?: number
 }
 
 export interface HttpService extends Configurable<HttpConfig> {
@@ -18,7 +22,7 @@ export interface HttpService extends Configurable<HttpConfig> {
     post(url, body, config?: RequestInit): Promise<any>;
 }
 
-export const FetchHttpService : HttpService = {
+export const GetFetchHttpService = () : HttpService => ({
     _httpConfig: _config.get<HttpConfig>('http', {
         ApiUrl: '',
         WebUrl: '',
@@ -36,9 +40,8 @@ export const FetchHttpService : HttpService = {
     async request(method: HttpMethod, url: string, body?, config?: RequestInit): Promise<any> {
         config = config || {};
         config.method = method || 'get';
-        config.headers = config.headers || {
-            'Content-Type': 'application/json'
-        };
+        config.headers = config.headers || {};
+        config.headers['Content-Type'] = config.headers['Content-Type'] || 'application/json';
         if (body != null)
             config.body = body;
         let user = _securityService && _securityService.getCurrentUser();
@@ -66,4 +69,4 @@ export const FetchHttpService : HttpService = {
         }
     }
 
-} as HttpService
+} as HttpService)

@@ -4,8 +4,14 @@ import _securityService from "container/security";
 import _config from 'container/config';
 import {AppConfig, Configurable} from "config";
 
+/**
+ * Used to configure authentication module.
+ * Use auth key in configuration
+ */
 export interface AuthConfig extends AppConfig {
-    LoginUrl: string
+    LoginUrl?: string,
+    UserIdFieldName?: string,
+    PasswordFieldName?: string
 }
 
 export interface AuthService extends Configurable<AuthConfig> {
@@ -13,10 +19,12 @@ export interface AuthService extends Configurable<AuthConfig> {
     login(loginData: LoginModel): Promise<void>
 }
 
-export const DefaultAuthService = {
+export const GetDefaultAuthService = (): AuthService => ({
 
     _authConfig: _config.get<AuthConfig>('auth', {
-        LoginUrl: 'auth/login'
+        LoginUrl: 'auth/login',
+        UserIdFieldName: 'email',
+        PasswordFieldName: 'password'
     }),
 
     getConfig(): AuthConfig {
@@ -24,10 +32,10 @@ export const DefaultAuthService = {
     },
 
     async login(loginData: LoginModel) {
-        const {email, password} = loginData;
+        const {userId, password} = loginData;
         let loggedInUser = await _http.post(this._authConfig.LoginUrl, {
-            email,
-            password
+            [this._authConfig.UserIdFieldName]: userId,
+            [this._authConfig.PasswordFieldName]: password
         })
         _securityService.setUser(loggedInUser)
     },
@@ -36,4 +44,4 @@ export const DefaultAuthService = {
         _securityService.setUser(null);
         window.location.href = _securityService.getConfig().AuthPageUrl;
     }
-} as AuthService
+} as AuthService)

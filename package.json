@@ -30,6 +30,7 @@
     "cross-env": "^7.0.3",
     "esbuild": "^0.8.49",
     "mocha": "^8.3.0",
+    "mockery": "^2.1.0",
     "sirv-cli": "^1.0.0",
     "ts-mocha": "^8.0.0",
     "ts-node": "^9.1.1",
