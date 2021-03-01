@@ -1,5 +1,5 @@
 
-global.localStorage = {
+global['localStorage'] = {
     setItem(key, val) { this[key] = val + ''; },
     getItem(key) { return this[key]; }
 }
@@ -14,7 +14,7 @@ global.fetch = async (requestInfo, init) => ({
     }
 });
 
-global.window = {
+global['window'] = {
     location: {
         href: ''
     }

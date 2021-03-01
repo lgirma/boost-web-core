@@ -19,29 +19,31 @@ export interface AuthService extends Configurable<AuthConfig> {
     login(loginData: LoginModel): Promise<void>
 }
 
-export const GetDefaultAuthService = (): AuthService => ({
+export function GetDefaultAuthService() {
+    return {
 
-    _authConfig: _config.get<AuthConfig>('auth', {
-        LoginUrl: 'auth/login',
-        UserIdFieldName: 'email',
-        PasswordFieldName: 'password'
-    }),
+        _authConfig: _config.get<AuthConfig>('auth', {
+            LoginUrl: 'auth/login',
+            UserIdFieldName: 'email',
+            PasswordFieldName: 'password'
+        }),
 
-    getConfig(): AuthConfig {
-        return this._authConfig;
-    },
+        getConfig(): AuthConfig {
+            return this._authConfig;
+        },
 
-    async login(loginData: LoginModel) {
-        const {userId, password} = loginData;
-        let loggedInUser = await _http.post(this._authConfig.LoginUrl, {
-            [this._authConfig.UserIdFieldName]: userId,
-            [this._authConfig.PasswordFieldName]: password
-        })
-        _securityService.setUser(loggedInUser)
-    },
+        async login(loginData: LoginModel) {
+            const {userId, password} = loginData;
+            let loggedInUser = await _http.post(this._authConfig.LoginUrl, {
+                [this._authConfig.UserIdFieldName]: userId,
+                [this._authConfig.PasswordFieldName]: password
+            })
+            _securityService.setUser(loggedInUser)
+        },
 
-    logout() {
-        _securityService.setUser(null);
-        window.location.href = _securityService.getConfig().AuthPageUrl;
-    }
-} as AuthService)
+        logout() {
+            _securityService.setUser(null);
+            window.location.href = _securityService.getConfig().AuthPageUrl;
+        }
+    } as AuthService
+}

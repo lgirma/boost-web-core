@@ -2,7 +2,7 @@ import { describe } from 'mocha';
 import { expect } from 'chai';
 import * as mockery from 'mockery';
 import {GetDefaultConfigService} from "../src/config";
-import './Common';
+import './common';
 
 
 mockery.enable();

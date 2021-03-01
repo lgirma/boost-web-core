@@ -5,11 +5,13 @@ export interface SvelteAppInitOptions extends AppInitOptions {
     mountOn: HTMLElement
 }
 
-export const GetSvelteAppService = (): AppService => ({
-    createApp(options: SvelteAppInitOptions) {
-        let targetElt = options.mountOn ?? document.body;
-        return new options.rootComponent({
-            target: targetElt
-        });
+export function GetSvelteAppService() {
+    return {
+        createApp(options: SvelteAppInitOptions) {
+            let targetElt = options.mountOn ?? document.body;
+            return new options.rootComponent({
+                target: targetElt
+            });
+        }
     }
-})
+}
