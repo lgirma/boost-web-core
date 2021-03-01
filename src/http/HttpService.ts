@@ -27,7 +27,7 @@ export function GetFetchHttpService() {
         _httpConfig: _config.get<HttpConfig>('http', {
             ApiUrl: '',
             WebUrl: '',
-            MaxUploadFileSize: 10000
+            MaxUploadFileSize: 1024*1024*10
         }),
         getConfig(): HttpConfig {
             return this._httpConfig;

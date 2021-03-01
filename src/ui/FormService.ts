@@ -1,0 +1,127 @@
+import {humanize} from 'common/utilities';
+
+type ValidateFunc = (any) => Promise<string>;
+
+export type FormFieldType = 'text' | 'email' | 'password' | 'file' | 'select' | 'autocomplete' |
+    'checkbox' | 'number' | 'date' | 'datetime' | 'time' | 'textarea' | 'markdown' | 'reCaptcha';
+
+export interface FormConfigBase {
+    validate?: ValidateFunc | ValidateFunc[],
+    scale?: number
+    id?: string
+    readonly?: boolean
+    showLabel?: boolean,
+    columns?: number
+}
+
+export interface FieldConfigBase extends FormConfigBase {
+    icon?: string
+    type?: FormFieldType
+    required?: boolean
+    helpText?: string
+    label?: string
+    placeholder?: string
+    validationResult?: FieldValidationResult,
+    options?: any
+}
+
+export interface WebForm extends FormConfigBase {
+    forObject: any,
+    formConfig: {
+        [key: string]: FieldConfigBase;
+    }
+}
+
+export interface FieldValidationResult {
+    errorMessage: string,
+    hasError: boolean
+}
+
+export interface FormValidationResult {
+    hasErrors: boolean,
+    fields: {
+        [key: string]: FieldValidationResult;
+    }
+}
+
+export class FormService {
+
+    create(config: WebForm): WebForm {
+        config.formConfig ??= {};
+        config.scale ??= 1;
+        config.readonly ??= false;
+        config.showLabel ??= true;
+        config.columns ??= 1;
+        if (config.columns < 1)
+            config.columns = 1;
+
+        Object.entries(config.forObject).forEach(_ => {
+            let fieldId = _ + '';
+            config.formConfig[fieldId] = {
+                scale: 1,
+                readonly: false,
+                showLabel: true,
+                type: 'text',
+                icon: null,
+                helpText: '',
+                validationResult: {
+                    errorMessage: '',
+                    hasError: false
+                },
+                id: fieldId,
+                required: false,
+                placeholder: null,
+                label: humanize(fieldId),
+                ...config.formConfig[fieldId]
+            }
+        });
+
+        return config;
+    }
+
+    async validateForm(form: WebForm) : Promise<FormValidationResult> {
+        const {forObject, formConfig} = form;
+        let result: FormValidationResult = {
+            hasErrors: false,
+            fields: {}
+        };
+        for (const id in forObject) {
+            if (!forObject.hasOwnProperty(id))
+                continue;
+            const config = formConfig[id]
+            result.fields[id] = {
+                hasError: false,
+                errorMessage: null
+            }
+            if (config == null) continue
+            const validate = config.validate
+            if (validate == null) continue
+            const value = forObject[id]
+
+            let errorMsg = ''
+            try {
+                if (validate.constructor === Array) {
+                    for (let i = 0; i < validate.length; i++) {
+                        const v = validate[i];
+                        errorMsg = await v(value);
+                        if (errorMsg) break;
+                    }
+                }
+                else {
+                    errorMsg = await (validate as ValidateFunc)(value);
+                }
+            } catch (ex) {
+                errorMsg = 'Failed to validate this entry.'
+            }
+            result.fields[id].errorMessage = errorMsg
+            result.fields[id].hasError = errorMsg != null && errorMsg.length > 0
+        }
+        result.hasErrors = Object.values(result.fields).reduce((p, n) => p || n.hasError, false)
+        return result
+    }
+
+}
+
+export function GetDefaultFormService(): FormService {
+    return new FormService();
+}
