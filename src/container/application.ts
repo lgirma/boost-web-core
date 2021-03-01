@@ -1,3 +1,3 @@
-import {AppService, SvelteApp} from 'application'
+import {AppService, GetSvelteAppService} from 'application'
 
-export default SvelteApp as AppService
+export default GetSvelteAppService() as AppService

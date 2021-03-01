@@ -1,3 +1,3 @@
-import {HttpService} from "http/HttpService";
+import {HttpService, GetFetchHttpService} from "http/HttpService";
 
-export default null as HttpService;
+export default GetFetchHttpService() as HttpService;

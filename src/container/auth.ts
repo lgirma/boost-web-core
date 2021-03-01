@@ -1,3 +1,3 @@
-import {AuthService, DefaultAuthService} from "security";
+import {AuthService, GetDefaultAuthService} from "security";
 
-export default DefaultAuthService as AuthService;
+export default GetDefaultAuthService() as AuthService;

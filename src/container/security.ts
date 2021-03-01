@@ -1,3 +1,3 @@
-import {DefaultSecurityService, SecurityService} from 'security/SecurityService'
+import {GetDefaultSecurityService, SecurityService} from 'security/SecurityService'
 
-export default DefaultSecurityService as SecurityService;
+export default GetDefaultSecurityService() as SecurityService;

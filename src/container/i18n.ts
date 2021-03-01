@@ -1,2 +1,2 @@
-import {i18nService} from "i18n";
-export default null as i18nService;
+import {i18nService, GetDefaultI18nService} from "i18n";
+export default GetDefaultI18nService() as i18nService;

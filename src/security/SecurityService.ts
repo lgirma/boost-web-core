@@ -26,7 +26,7 @@ export interface SecurityConfig extends AppConfig {
     LogoutUrl?: string
 }
 
-export const DefaultSecurityService = {
+export const GetDefaultSecurityService = (): SecurityService => ({
 
     _securityConfig: _config.get<SecurityConfig>('security', {
         BUNDLE_ROLES: {},
@@ -107,4 +107,4 @@ export const DefaultSecurityService = {
             }
         }
     }
-} as DefaultSecurityServiceType;
+} as DefaultSecurityServiceType);
