@@ -55,7 +55,7 @@ describe('Form service tests', () => {
     });
 
     it('Validates forms correctly', async () => {
-        let forObject = {userName: '', age: 17, email: 'abe@example.com'};
+        let forObject = {userName: '', age: 17, email: 'abe@example.com', city: ''};
         let config = _formService.create(forObject, {
             showLabel: false,
             fieldsConfig: {
@@ -69,6 +69,7 @@ describe('Form service tests', () => {
 
         expect(validationResult.hasError).to.be.true;
         expect(requiredValidator).to.have.been.called();
+        expect(validationResult.fields.city.hasError).to.be.false;
         expect(validationResult.fields.age.hasError).to.be.true;
         expect(validationResult.fields.age.errorMessage).to.equal('AGE_18_OR_ABOVE');
         expect(validationResult.fields.email.hasError).to.be.false;

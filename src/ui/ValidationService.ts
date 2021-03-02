@@ -18,11 +18,11 @@ export function GetDefaultValidationService() {
     _i18n.addTranslations(i18nRes());
     return {
 
-        notEmpty(val, errorMsg = '') {
+        notEmpty(val, errorMsg = _i18n._('VALIDATION_MESSAGE_EMPTY')) {
             return isEmpty(val) ? errorMsg : '';
         },
 
-        validName(val, errorMsg = _i18n._('VALIDATION_MESSAGE_EMPTY')) {
+        validName(val, errorMsg = _i18n._('VALIDATION_MESSAGE_VALID_NAME')) {
             if (isEmpty(val) || /[<>/\\{}*#~`%]+$/.test(val)) return errorMsg;
             return '';
         },
