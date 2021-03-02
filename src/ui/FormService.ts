@@ -1,6 +1,11 @@
 import {humanize} from 'common/utilities';
 
-type ValidateFunc = (any) => Promise<string>;
+export type ValidateFunc = (any) => Promise<string>;
+
+export async function requiredValidator(val: any): Promise<string> {
+    if (val == null || val.length == 0)
+        return 'Value is required';
+}
 
 export type FormFieldType = 'text' | 'email' | 'password' | 'file' | 'select' | 'autocomplete' |
     'checkbox' | 'number' | 'date' | 'datetime' | 'time' | 'textarea' | 'markdown' | 'reCaptcha';
@@ -20,16 +25,17 @@ export interface FieldConfigBase extends FormConfigBase {
     helpText?: string
     label?: string
     placeholder?: string
-    validationResult?: FieldValidationResult,
+    validationResult?: FieldValidationResult
     customOptions?: any
+}
+
+export type FieldsConfig = {
+    [key: string]: FieldConfigBase;
 }
 
 export interface WebForm extends FormConfigBase {
     columns?: number
-    forObject: any,
-    formConfig?: {
-        [key: string]: FieldConfigBase;
-    }
+    fieldsConfig?: FieldsConfig
 }
 
 export interface FieldValidationResult {
@@ -46,8 +52,8 @@ export interface FormValidationResult {
 
 export class FormService {
 
-    create(config: WebForm): WebForm {
-        config.formConfig ??= {};
+    create(forObject, config: WebForm): WebForm {
+        config.fieldsConfig ??= {};
         config.scale ??= 1;
         config.readonly ??= false;
         config.showLabel ??= true;
@@ -55,11 +61,11 @@ export class FormService {
         if (config.columns < 1)
             config.columns = 1;
 
-        Object.entries(config.forObject).forEach(_ => {
+        Object.entries(forObject).forEach(_ => {
             let fieldId = _[0];
-            let fieldValue = config.forObject[fieldId];
+            let fieldValue = forObject[fieldId];
 
-            config.formConfig[fieldId] = {
+            config.fieldsConfig[fieldId] = {
                 scale: config.scale,
                 readonly: config.readonly,
                 showLabel: config.showLabel,
@@ -73,10 +79,10 @@ export class FormService {
                 required: false,
                 placeholder: null,
                 label: humanize(fieldId),
-                ...config.formConfig[fieldId]
+                ...config.fieldsConfig[fieldId]
             }
-            if (config.formConfig[fieldId].type == null)
-                config.formConfig[fieldId].type = this.guessType(fieldId, fieldValue);
+            if (config.fieldsConfig[fieldId].type == null)
+                config.fieldsConfig[fieldId].type = this.guessType(fieldId, fieldValue);
         });
 
         return config;
@@ -102,8 +108,7 @@ export class FormService {
         return 'text';
     }
 
-    async validateForm(form: WebForm) : Promise<FormValidationResult> {
-        const {forObject, formConfig} = form;
+    async validateForm(forObject, fieldsConfig: FieldsConfig) : Promise<FormValidationResult> {
         let result: FormValidationResult = {
             hasErrors: false,
             fields: {}
@@ -111,15 +116,21 @@ export class FormService {
         for (const id in forObject) {
             if (!forObject.hasOwnProperty(id))
                 continue;
-            const config = formConfig[id]
+            const config = fieldsConfig[id]
             result.fields[id] = {
                 hasError: false,
                 errorMessage: null
             }
             if (config == null) continue
-            const validate = config.validate
-            if (validate == null) continue
+            let validate = config.validate
             const value = forObject[id]
+            if (config.required) {
+                if (validate == null) validate = requiredValidator;
+                else if (validate.constructor === Array)
+                    validate.push(requiredValidator);
+                else validate = [validate as ValidateFunc, requiredValidator]
+            }
+            else if (validate == null) continue
 
             let errorMsg = ''
             try {

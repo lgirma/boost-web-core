@@ -24,26 +24,26 @@ describe('Form service tests', () => {
     });
 
     it('Sets up form config properly', () => {
-        let config = _formService.create({
+        let forObject = {userName: '', password: '', rememberMe: false, agreeToTerms: false};
+        let config = _formService.create(forObject,{
             showLabel: false,
-            forObject: {userName: '', password: '', rememberMe: false, agreeToTerms: false},
-            formConfig: {
+            fieldsConfig: {
                 agreeToTerms: {
                     label: "I agree to terms",
                     showLabel: true
                 }
             }
         })
-        expect(config.formConfig['userName'].label).to.equal('User Name');
-        expect(config.formConfig['userName'].id).to.equal('userName');
-        expect(config.formConfig['userName'].showLabel).to.equal(false);
-        expect(config.formConfig['password'].label).to.equal('Password');
-        expect(config.formConfig['password'].id).to.equal('password');
-        expect(config.formConfig['rememberMe'].label).to.equal('Remember Me');
-        expect(config.formConfig['rememberMe'].id).to.equal('rememberMe');
-        expect(config.formConfig['agreeToTerms'].label).to.equal('I agree to terms');
-        expect(config.formConfig['agreeToTerms'].id).to.equal('agreeToTerms');
-        expect(config.formConfig['agreeToTerms'].showLabel).to.equal(true);
+        expect(config.fieldsConfig['userName'].label).to.equal('User Name');
+        expect(config.fieldsConfig['userName'].id).to.equal('userName');
+        expect(config.fieldsConfig['userName'].showLabel).to.equal(false);
+        expect(config.fieldsConfig['password'].label).to.equal('Password');
+        expect(config.fieldsConfig['password'].id).to.equal('password');
+        expect(config.fieldsConfig['rememberMe'].label).to.equal('Remember Me');
+        expect(config.fieldsConfig['rememberMe'].id).to.equal('rememberMe');
+        expect(config.fieldsConfig['agreeToTerms'].label).to.equal('I agree to terms');
+        expect(config.fieldsConfig['agreeToTerms'].id).to.equal('agreeToTerms');
+        expect(config.fieldsConfig['agreeToTerms'].showLabel).to.equal(true);
     });
 
 });
