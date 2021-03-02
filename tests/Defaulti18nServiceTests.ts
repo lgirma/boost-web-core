@@ -9,8 +9,8 @@ mockery.enable();
 mockery.registerMock('container/config', GetDefaultConfigService({
     i18n: {
         Translations: {
-            en: {CANCEL: 'Cancel'},
-            am: {CANCEL: 'ተወው', OK: 'እሺ'}
+            en: {CANCEL: 'Cancel', PARAMETERIZED: 'Accept {0} and {1}'},
+            am: {CANCEL: 'ተወው', OK: 'እሺ', PARAMETERIZED: '{0} እና {1} ተቀበል'}
         },
         DefaultLocale: 'am'
     }
@@ -45,6 +45,11 @@ describe('Default i18n service tests', () => {
         _i18nService.changeLanguage('en')
         expect(_i18nService.getCurrentUserLanguage()).to.equal('en')
         expect(_i18nService._('OK')).to.equal('እሺ')
+    });
+
+    it('Supports translations with parameters', () => {
+        _i18nService.changeLanguage('en')
+        expect(_i18nService._('PARAMETERIZED', 'a', 2)).to.equal('Accept a and 2')
     });
 
     it('Adds new translations properly', () => {

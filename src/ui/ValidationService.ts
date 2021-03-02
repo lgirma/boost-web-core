@@ -32,12 +32,12 @@ export function GetDefaultValidationService() {
                 if (val == null || val.trim().length === 0)
                     return _i18n._('VALIDATION_MESSAGE_EMPTY')
                 else if (val.length < length)
-                    return`Should have at least ${length} characters.`
+                    return _i18n._('VALIDATION_MESSAGE_MIN_LENGTH', length)
                 return ''
             }
         },
 
-        notEmptyFile(val, errorMsg = 'Please, upload a file.') {
+        notEmptyFile(val, errorMsg = _i18n._('VALIDATION_MESSAGE_UPLOAD_EMPTY')) {
             if (val == null) return errorMsg
             else if (val.uuid) return ''
             else if (val.uploadedFiles == null) return errorMsg
@@ -53,7 +53,7 @@ export function GetDefaultValidationService() {
             return ''
         },
 
-        imgTypeFile(val, errorMsg = 'Please, upload only images') {
+        imgTypeFile(val, errorMsg = _i18n._('VALIDATION_MESSAGE_UPLOAD_IMAGE_ONLY')) {
             if (val == null || val.uploadedFiles == null || val.uploadedFiles.length === 0)
                 return '';
             if (val.uploadedFiles[0].type.indexOf('image/') === -1)
@@ -61,7 +61,7 @@ export function GetDefaultValidationService() {
             return ''
         },
 
-        strongPassword({minLength = 8, specialChars = true} = {}) {
+        getStrongPasswordValidator({minLength = 8, specialChars = true} = {}) {
             return val => {
                 if (val == null || val.trim().length === 0)
                     return _i18n._('VALIDATION_MESSAGE_EMPTY')

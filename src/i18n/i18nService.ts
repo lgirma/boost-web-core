@@ -23,7 +23,7 @@ export type i18nResource = {[langKey: string]: i18nTranslations};
 export interface i18nService {
     getCurrentUserLanguage(): string;
     changeLanguage(lang: string);
-    _(key: string): string
+    _(key: string, ...args): string
     addTranslations(res: i18nResource)
 }
 
@@ -64,11 +64,14 @@ export function GetDefaultI18nService() {
             Translations: {}
         }),
 
-        _(key: string): string {
+        _(key: string, ...args): string {
             const currLang = this._currentLang ?? this.getCurrentUserLanguage();
             let result = this._18nConfig.Translations[currLang][key];
             if (result === undefined && currLang != this._18nConfig.DefaultLocale)
                 result = this._18nConfig.Translations[this._18nConfig.DefaultLocale][key];
+            for (let i=0; i<args.length; i++) {
+                result = result.replace(`{${i}}`, args[i]);
+            }
             return result ?? key;
         },
 
