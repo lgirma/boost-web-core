@@ -1,11 +1,19 @@
 import { describe } from 'mocha';
-import { expect } from 'chai';
+const chai = require('chai');
+import spies from 'chai-spies';
 import * as mockery from 'mockery';
 import * as commonUtils from '../src/common/utilities'
 
+const expect = chai.expect;
+chai.use(spies);
 mockery.enable();
 
+const validationService = {
+    notEmpty(val) {}
+};
 mockery.registerMock('common/utilities', commonUtils);
+mockery.registerMock('container/config', {});
+mockery.registerMock('container/validation', validationService);
 import {GetDefaultFormService} from "../src/ui/FormService";
 
 mockery.disable();
@@ -44,6 +52,26 @@ describe('Form service tests', () => {
         expect(config.fieldsConfig['agreeToTerms'].label).to.equal('I agree to terms');
         expect(config.fieldsConfig['agreeToTerms'].id).to.equal('agreeToTerms');
         expect(config.fieldsConfig['agreeToTerms'].showLabel).to.equal(true);
+    });
+
+    it('Validates forms correctly', async () => {
+        let forObject = {userName: '', age: 17, email: 'abe@example.com'};
+        let config = _formService.create(forObject,{
+            showLabel: false,
+            fieldsConfig: {
+                userName: {required: true},
+                email: {required: true},
+                age: {validate: async val => (val > 18 ? '' : 'AGE_18_OR_ABOVE')}
+            }
+        });
+        let requiredValidator = chai.spy.on(validationService, 'notEmpty')
+        let validationResult = await _formService.validateForm(forObject, config.fieldsConfig);
+
+        expect(validationResult.hasErrors).to.be.true;
+        expect(requiredValidator).to.have.been.called();
+        expect(validationResult.fields.age.hasError).to.be.true;
+        expect(validationResult.fields.age.errorMessage).to.equal('AGE_18_OR_ABOVE');
+        expect(validationResult.fields.email.hasError).to.be.false;
     });
 
 });

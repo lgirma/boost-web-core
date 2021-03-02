@@ -1,11 +1,8 @@
 import {humanize} from 'common/utilities';
+import {FormValidationResult, FieldValidationResult} from "ui/FormModels";
+import _validator from 'container/validation'
 
-export type ValidateFunc = (any) => Promise<string>;
-
-export async function requiredValidator(val: any): Promise<string> {
-    if (val == null || val.length == 0)
-        return 'Value is required';
-}
+export type ValidateFunc = any//(val) => Promise<string>
 
 export type FormFieldType = 'text' | 'email' | 'password' | 'file' | 'select' | 'autocomplete' |
     'checkbox' | 'number' | 'date' | 'datetime' | 'time' | 'textarea' | 'markdown' | 'reCaptcha';
@@ -36,18 +33,6 @@ export type FieldsConfig = {
 export interface WebForm extends FormConfigBase {
     columns?: number
     fieldsConfig?: FieldsConfig
-}
-
-export interface FieldValidationResult {
-    errorMessage: string,
-    hasError: boolean
-}
-
-export interface FormValidationResult {
-    hasErrors: boolean,
-    fields: {
-        [key: string]: FieldValidationResult;
-    }
 }
 
 export class FormService {
@@ -125,10 +110,10 @@ export class FormService {
             let validate = config.validate
             const value = forObject[id]
             if (config.required) {
-                if (validate == null) validate = requiredValidator;
+                if (validate == null) validate = _validator.notEmpty;
                 else if (validate.constructor === Array)
-                    validate.push(requiredValidator);
-                else validate = [validate as ValidateFunc, requiredValidator]
+                    validate.push(_validator.notEmpty);
+                else validate = [validate as ValidateFunc, _validator.notEmpty]
             }
             else if (validate == null) continue
 
@@ -142,7 +127,7 @@ export class FormService {
                     }
                 }
                 else {
-                    errorMsg = await (validate as ValidateFunc)(value);
+                    errorMsg = await validate(value);
                 }
             } catch (ex) {
                 errorMsg = 'Failed to validate this entry.'

@@ -11,6 +11,7 @@
   ],
   "compilerOptions": {
     "baseUrl": "src",
+    "esModuleInterop": true,
     "moduleResolution": "node",
     "module": "commonjs",
     "strict": false

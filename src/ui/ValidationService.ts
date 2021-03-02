@@ -1,5 +1,5 @@
 import _config from "container/config";
-import {FieldConfigBase, WebForm, FormValidationResult} from "ui/FormService";
+import {FormValidationResult} from "ui/FormModels";
 import {HttpConfig} from "../http";
 import {getFriendlyFileSize} from "common/utilities";
 
@@ -24,7 +24,7 @@ export function GetDefaultValidationService() {
             return '';
         },
 
-        minLen(length = 1) {
+        getMinLenValidator(length = 1) {
             return val => {
                 if (val == null || val.trim().length === 0)
                     return 'Please, fill out this field.'
