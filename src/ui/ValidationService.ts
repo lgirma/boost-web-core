@@ -2,6 +2,9 @@ import _config from "container/config";
 import {FormValidationResult, ValidateFunc} from "ui/FormModels";
 import {HttpConfig} from "../http";
 import {getFriendlyFileSize, isEmpty} from "common/utilities";
+import i18nRes from './validation.i18n';
+import _i18n from 'container/i18n';
+import {i18nResource} from "../i18n";
 
 
 const special_char_regex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/
@@ -12,13 +15,14 @@ export const FILE_TYPES = {
 };
 
 export function GetDefaultValidationService() {
+    _i18n.addTranslations(i18nRes);
     return {
 
-        notEmpty(val, errorMsg = 'Please, fill out this field.') {
+        notEmpty(val, errorMsg = '') {
             return isEmpty(val) ? errorMsg : '';
         },
 
-        validName(val, errorMsg = 'Please, fill in an appropriate name') {
+        validName(val, errorMsg = _i18n._('VALIDATION_MESSAGE_EMPTY')) {
             if (isEmpty(val) || /[<>/\\{}*#~`%]+$/.test(val)) return errorMsg;
             return '';
         },
@@ -26,7 +30,7 @@ export function GetDefaultValidationService() {
         getMinLenValidator(length = 1): ValidateFunc {
             return val => {
                 if (val == null || val.trim().length === 0)
-                    return 'Please, fill out this field.'
+                    return _i18n._('VALIDATION_MESSAGE_EMPTY')
                 else if (val.length < length)
                     return`Should have at least ${length} characters.`
                 return ''
@@ -60,7 +64,7 @@ export function GetDefaultValidationService() {
         strongPassword({minLength = 8, specialChars = true} = {}) {
             return val => {
                 if (val == null || val.trim().length === 0)
-                    return 'Please, fill out this field.'
+                    return _i18n._('VALIDATION_MESSAGE_EMPTY')
                 else if (val.length < minLength)
                     return`Password should have at least ${minLength} characters.`
                 else if (val.toLowerCase() === val || val.toUpperCase() === val)

@@ -47,4 +47,14 @@ describe('Default i18n service tests', () => {
         expect(_i18nService._('OK')).to.equal('እሺ')
     });
 
+    it('Adds new translations properly', () => {
+        _i18nService.addTranslations({
+            en: {ACCEPT: 'Accept'},
+            de: {ACCEPT: 'akzeptieren'}
+        })
+        expect(_i18nService._('ACCEPT')).to.equal('Accept')
+        _i18nService.changeLanguage('de')
+        expect(_i18nService._('ACCEPT')).to.equal('akzeptieren')
+    });
+
 });

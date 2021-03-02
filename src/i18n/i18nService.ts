@@ -2,12 +2,29 @@ import {AppConfig} from "config";
 import _config from 'container/config';
 
 export type i18nTranslations = {[key: string]: string}
+/**
+ * Represents a translation resource
+ * A typical translation resource could look like:
+ *
+ * @example
+ * {
+ *     "en": {
+ *         "OK": "Ok",
+ *         "CANCEL": "Cancel"
+ *     },
+ *     "am": {
+ *         "OK": "እሺ",
+ *         "CANCEL": "ተወው"
+ *     }
+ * }
+ */
 export type i18nResource = {[langKey: string]: i18nTranslations};
 
 export interface i18nService {
     getCurrentUserLanguage(): string;
     changeLanguage(lang: string);
     _(key: string): string
+    addTranslations(res: i18nResource)
 }
 
 export interface WebLocale {
@@ -63,6 +80,19 @@ export function GetDefaultI18nService() {
         getCurrentUserLanguage(): string {
             return this._currentLang
                 ?? (this._currentLang = localStorage.getItem('userLanguage') || this._18nConfig.DefaultLocale || 'en');
+        },
+
+        addTranslations(res: i18nResource) {
+            const langKeys = Object.keys(res);
+            for (let i=0; i<langKeys.length; i++) {
+                const langKey = langKeys[i];
+                let translations = this._18nConfig.Translations[langKey];
+                if (translations == null)
+                    translations = this._18nConfig.Translations[langKey] = {};
+                Object.keys(res[langKey]).forEach(tKey => {
+                    translations[tKey] = res[langKey][tKey];
+                });
+            }
         }
 
     } as i18nService
