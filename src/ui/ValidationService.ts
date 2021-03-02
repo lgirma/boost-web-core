@@ -15,7 +15,7 @@ export const FILE_TYPES = {
 };
 
 export function GetDefaultValidationService() {
-    _i18n.addTranslations(i18nRes);
+    _i18n.addTranslations(i18nRes());
     return {
 
         notEmpty(val, errorMsg = '') {

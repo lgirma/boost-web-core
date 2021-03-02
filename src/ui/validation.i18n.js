@@ -1,4 +1,5 @@
-export default {
+
+export default () => ({
     en: {
         VALIDATION_MESSAGE_EMPTY: "Please, fill out this field.",
         VALIDATION_MESSAGE_UPLOAD_EMPTY: "Please, upload a file.",
@@ -11,4 +12,4 @@ export default {
         VALIDATION_MESSAGE_MIN_LENGTH: "ቢያንስ {0} ፊደላት መሆን አለባቸው",
         VALIDATION_MESSAGE_UPLOAD_IMAGE_ONLY: "እባክዎትን፣ የምስል/ሥዕል ፋይል ብቻ ይስቀሉ",
     }
-}
+})
