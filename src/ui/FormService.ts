@@ -1,8 +1,13 @@
-import {humanize} from 'common/utilities';
-import {FormValidationResult, FieldValidationResult} from "ui/FormModels";
-import _validator from 'container/validation'
+import {humanize, isEmpty} from 'common/utilities';
+import {
+    FormValidationResult,
+    ValidationResult,
+    ValidateFunc,
+    getValidationResult,
+    AsyncValidateFunc
+} from "./FormModels";
+import _validator from 'container/validation';
 
-export type ValidateFunc = any//(val) => Promise<string>
 
 export type FormFieldType = 'text' | 'email' | 'password' | 'file' | 'select' | 'autocomplete' |
     'checkbox' | 'number' | 'date' | 'datetime' | 'time' | 'textarea' | 'markdown' | 'reCaptcha';
@@ -22,7 +27,7 @@ export interface FieldConfigBase extends FormConfigBase {
     helpText?: string
     label?: string
     placeholder?: string
-    validationResult?: FieldValidationResult
+    validationResult?: ValidationResult
     customOptions?: any
 }
 
@@ -93,9 +98,11 @@ export class FormService {
         return 'text';
     }
 
-    async validateForm(forObject, fieldsConfig: FieldsConfig) : Promise<FormValidationResult> {
+    async validateForm(forObject, formConfig: WebForm) : Promise<FormValidationResult> {
+        let fieldsConfig = formConfig.fieldsConfig;
         let result: FormValidationResult = {
-            hasErrors: false,
+            hasError: false,
+            errorMessage: '',
             fields: {}
         };
         for (const id in forObject) {
@@ -117,28 +124,36 @@ export class FormService {
             }
             else if (validate == null) continue
 
-            let errorMsg = ''
-            try {
-                if (validate.constructor === Array) {
-                    for (let i = 0; i < validate.length; i++) {
-                        const v = validate[i];
-                        errorMsg = await v(value);
-                        if (errorMsg) break;
-                    }
-                }
-                else {
-                    errorMsg = await validate(value);
-                }
-            } catch (ex) {
-                errorMsg = 'Failed to validate this entry.'
-            }
-            result.fields[id].errorMessage = errorMsg
-            result.fields[id].hasError = errorMsg != null && errorMsg.length > 0
+            let fieldValidationResult = await runValidator(validate, value);
+            result.fields[id].errorMessage = fieldValidationResult.errorMessage;
+            result.fields[id].hasError = fieldValidationResult.hasError;
         }
-        result.hasErrors = Object.values(result.fields).reduce((p, n) => p || n.hasError, false)
+        const formLevelValidation = await runValidator(formConfig.validate, forObject);
+        result.hasError = formLevelValidation.hasError || Object.values(result.fields).reduce((p, n) => p || n.hasError, false)
+        result.errorMessage = formLevelValidation.errorMessage
         return result
     }
 
+}
+
+async function runValidator(validator: ValidateFunc | ValidateFunc[], value): Promise<ValidationResult> {
+    if (validator == null)
+        return getValidationResult();
+    try {
+        if (validator.constructor === Array) {
+            for (let i = 0; i < validator.length; i++) {
+                const v = validator[i];
+                let errorMsg = await v(value);
+                if (errorMsg) return getValidationResult(errorMsg)
+            }
+        }
+        else if (validator.constructor === Function || validator.constructor === Object.getPrototypeOf(async function() {}).constructor) {
+            return getValidationResult(await (validator as AsyncValidateFunc)(value));
+        }
+    } catch (ex) {
+        return getValidationResult('Failed to validate this entry.');
+    }
+    getValidationResult()
 }
 
 export function GetDefaultFormService(): FormService {

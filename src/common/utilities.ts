@@ -15,3 +15,11 @@ export function getFriendlyFileSize(bytes) {
     else
         return Math.round(10* bytes / (1024*1024))/10 + ' Mb'
 }
+
+/**
+ * Checks if the given string is empty or white space only.
+ * @param str
+ */
+export function isEmpty(str: string) {
+    return str == null || str.trim().length == 0;
+}

@@ -33,7 +33,7 @@ describe('Form service tests', () => {
 
     it('Sets up form config properly', () => {
         let forObject = {userName: '', password: '', rememberMe: false, agreeToTerms: false};
-        let config = _formService.create(forObject,{
+        let config = _formService.create(forObject, {
             showLabel: false,
             fieldsConfig: {
                 agreeToTerms: {
@@ -56,7 +56,7 @@ describe('Form service tests', () => {
 
     it('Validates forms correctly', async () => {
         let forObject = {userName: '', age: 17, email: 'abe@example.com'};
-        let config = _formService.create(forObject,{
+        let config = _formService.create(forObject, {
             showLabel: false,
             fieldsConfig: {
                 userName: {required: true},
@@ -65,13 +65,23 @@ describe('Form service tests', () => {
             }
         });
         let requiredValidator = chai.spy.on(validationService, 'notEmpty')
-        let validationResult = await _formService.validateForm(forObject, config.fieldsConfig);
+        let validationResult = await _formService.validateForm(forObject, config);
 
-        expect(validationResult.hasErrors).to.be.true;
+        expect(validationResult.hasError).to.be.true;
         expect(requiredValidator).to.have.been.called();
         expect(validationResult.fields.age.hasError).to.be.true;
         expect(validationResult.fields.age.errorMessage).to.equal('AGE_18_OR_ABOVE');
         expect(validationResult.fields.email.hasError).to.be.false;
+    });
+
+    it('Does form level validation', async () => {
+        let registration = {userName: '', password: 'a', confirmPassword: 'b'};
+        let formConfig = _formService.create(registration, {
+            validate: form => (form.password != form.confirmPassword ? 'UN_MATCHING_PASSWORDS' : '')
+        });
+        let validationResult = await _formService.validateForm(registration, formConfig);
+        expect(validationResult.hasError).to.be.true;
+        expect(validationResult.errorMessage).to.equal('UN_MATCHING_PASSWORDS');
     });
 
 });

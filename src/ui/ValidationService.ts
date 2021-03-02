@@ -1,7 +1,7 @@
 import _config from "container/config";
-import {FormValidationResult} from "ui/FormModels";
+import {FormValidationResult, ValidateFunc} from "ui/FormModels";
 import {HttpConfig} from "../http";
-import {getFriendlyFileSize} from "common/utilities";
+import {getFriendlyFileSize, isEmpty} from "common/utilities";
 
 
 const special_char_regex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/
@@ -15,16 +15,15 @@ export function GetDefaultValidationService() {
     return {
 
         notEmpty(val, errorMsg = 'Please, fill out this field.') {
-            if (val == null || val.trim().length === 0) return errorMsg;
-            return ''
+            return isEmpty(val) ? errorMsg : '';
         },
 
         validName(val, errorMsg = 'Please, fill in an appropriate name') {
-            if (val == null || val.trim().length === 0 || /[<>/\\{}*#~`%]+$/.test(val)) return errorMsg;
+            if (isEmpty(val) || /[<>/\\{}*#~`%]+$/.test(val)) return errorMsg;
             return '';
         },
 
-        getMinLenValidator(length = 1) {
+        getMinLenValidator(length = 1): ValidateFunc {
             return val => {
                 if (val == null || val.trim().length === 0)
                     return 'Please, fill out this field.'
@@ -83,7 +82,8 @@ export function GetDefaultValidationService() {
 
         async parseValidationResult(apiResult) {
             let result : FormValidationResult = {
-                hasErrors: false,
+                hasError: false,
+                errorMessage: '',
                 fields: {}
             };
             if (apiResult && apiResult.code === 'ValidationError' && apiResult.details) {
@@ -91,7 +91,7 @@ export function GetDefaultValidationService() {
                 for (let i=0; i<keys.length; i++) {
                     let fieldId = keys[i]
                     if (apiResult.details[fieldId].length) {
-                        result.hasErrors = true
+                        result.hasError = true
                         fieldId = fieldId.slice(0, 1).toLowerCase() + fieldId.slice(1)
                         result.fields[fieldId] = {
                             hasError: true,
