@@ -1,4 +1,4 @@
-import {MessageType} from "./MessageType";
+import {MessageType} from "./Common";
 
 export interface IconOptions {
     scale?: number

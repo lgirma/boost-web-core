@@ -1,5 +1,5 @@
 import {GlobalModalOptions} from "./ModalService";
-import {MessageType} from "./MessageType";
+import {MessageType} from "./Common";
 
 export abstract class DialogService {
 

@@ -1,4 +1,4 @@
-import {MessageType} from "./MessageType";
+import {MessageType} from "./Common";
 import {ScreenPosition} from "./ScreenPosition";
 import _i18n from 'container/i18n';
 
