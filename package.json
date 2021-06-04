@@ -13,8 +13,8 @@
     "test": "ts-mocha -p ./tsconfig.tests.json -r jsdom-global/register 'tests/**/*.ts'"
   },
   "author": "Leone",
-  "repository": "https://github.com/lgirma/boost-web",
-  "homepage": "https://github.com/lgirma/boost-web/tree/master/boost-web-core",
+  "repository": "https://github.com/lgirma/boost-web-core",
+  "homepage": "https://github.com/lgirma/boost-web-core",
   "license": "ISC",
   "devDependencies": {
     "@types/chai": "^4.2.18",
