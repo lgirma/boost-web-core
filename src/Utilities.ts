@@ -9,6 +9,18 @@ export function humanize(str: string) {
         .trim();
 }
 
+export function camelToKebabCase(str: string) {
+    return str.split('').map((letter, idx) => {
+        return letter.toUpperCase() === letter
+            ? `${idx !== 0 ? '-' : ''}${letter.toLowerCase()}`
+            : letter;
+    }).join('');
+}
+
+export function kebabToCamelCase(str: string): string {
+    return str.replace(/-([a-z])/gi,(s, group) =>  group.toUpperCase());
+}
+
 export function getFriendlyFileSize(bytes: number) {
     if (bytes < 1024)
         return bytes + ' bytes'
@@ -38,23 +50,23 @@ export function isArray(a: any) {
  * Matches date string in the formats YYYY/MM/DD or YYYY-MM-DD
  * @param str
  */
-const dateRegex = '[1-2][0-9][0-9][0-9](\-|\/)[0-3][0-9](\-|\/)[0-3][0-9]$'
-const timeRegex = '([01][0-9]|2[0-3]):([012345][0-9])(:([012345][0-9]))'
+const dateRegex = '[1-2][0-9][0-9][0-9](\-|\/)[0-3][0-9](\-|\/)[0-3][0-9]'
+const timeRegex = '([01][0-9]|2[0-3]):([012345][0-9])(:[012345][0-9])?'
 export function isDate(str: string){
-    return new RegExp(dateRegex).test(str);
+    return new RegExp(`^${dateRegex}$`).test(str);
 }
 
 export function isTime(str: string){
-    return new RegExp(timeRegex).test(str);
+    return new RegExp(`^${timeRegex}$`).test(str);
 }
 
 export function isDateTime(str: string){
-    const _regExp  = new RegExp(`${dateRegex}\s${timeRegex}`);
+    const _regExp  = new RegExp(`^${dateRegex}\s${timeRegex}$`);
     return _regExp.test(str);
 }
 
 export function isYear(str: string){
-    const _regExp  = new RegExp('[1-2][0-9][0-9][0-9]$');
+    const _regExp  = new RegExp('^[1-2][0-9][0-9][0-9]$');
     return _regExp.test(str);
 }
 
