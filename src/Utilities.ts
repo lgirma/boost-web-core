@@ -112,7 +112,7 @@ export function parseBindingExpression(fn: Function): {body: string, args: strin
     let code = fn.toString().trim()
     let arrowPos = code.indexOf('=>')
     if (arrowPos > -1) {
-        let arg = code.substr(0, arrowPos)
+        let arg = code.substr(0, arrowPos).replace(/\(|\)/g, '')
         let body = code.substr(arrowPos + 2, code.length - arrowPos - 2)
         return {args: arg.trim().split(','), body: body.trim()}
     }
