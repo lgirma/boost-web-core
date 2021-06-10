@@ -1,4 +1,5 @@
 import {Dict, Nullable} from "./TypescriptUtils";
+import {Func} from "mocha";
 
 export function humanize(str: string) {
     return str
@@ -105,4 +106,23 @@ export function groupBy<T>(arr: T[], by: (item: T) => any): Dict<T[]> {
         rv[key].push(x);
         return rv;
     }, {} as Dict<T[]>);
+}
+
+export function parseBindingExpression(fn: Function): {body: string, args: string[]} {
+    let code = fn.toString().trim()
+    let arrowPos = code.indexOf('=>')
+    if (arrowPos > -1) {
+        let arg = code.substr(0, arrowPos)
+        let body = code.substr(arrowPos + 2, code.length - arrowPos - 2)
+        return {args: arg.trim().split(','), body: body.trim()}
+    }
+    let funcPos = code.indexOf('{')
+    if (funcPos > -1) {
+        let decl = code.substr(0, funcPos)
+        let arg = decl.substr(decl.indexOf('(') + 1, decl.lastIndexOf(')') - decl.indexOf('(') - 1)
+        let body = code.substr(funcPos + 1, code.lastIndexOf('}') - funcPos - 1)
+        body = body.replace(/return|;/g, '')
+        return {args: arg.trim().split(','), body: body.trim()}
+    }
+    return {body: '', args: []}
 }

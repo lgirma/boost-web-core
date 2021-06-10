@@ -4,7 +4,7 @@ const expect = chai.expect;
 
 import {
     isEmpty, getFriendlyFileSize, humanize, camelToKebabCase, kebabToCamelCase,
-    isDate, isYear, isFunc, isTime, toArray
+    isDate, isYear, isFunc, isTime, toArray, parseBindingExpression
 } from '../src/Utilities'
 
 describe('Utilities tests', () => {
@@ -71,6 +71,12 @@ describe('Utilities tests', () => {
         expect(toArray(5)).deep.to.equal([5]);
         expect(toArray([3, 5])).deep.to.equal([3, 5]);
         expect(toArray(null)).deep.to.equal([]);
+    });
+
+    it('Parses binding expressions properly', () => {
+        expect(parseBindingExpression((x: any) => x.name)).deep.to.equal({args: ['x'], body: 'x.name'});
+        expect(parseBindingExpression((arg1: any) => arg1.contact.fullName.last))
+            .deep.to.equal({args: ['arg1'], body: 'arg1.contact.fullName.last'});
     });
 
 });
