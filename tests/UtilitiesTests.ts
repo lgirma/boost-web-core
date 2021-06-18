@@ -4,7 +4,7 @@ const expect = chai.expect;
 
 import {
     isEmpty, getFriendlyFileSize, humanize, camelToKebabCase, kebabToCamelCase,
-    isDate, isYear, isFunc, isTime, toArray, parseBindingExpression
+    isDate, isYear, isFunc, isTime, toArray, parseBindingExpression, randomHash
 } from '../src/Utilities'
 
 describe('Utilities tests', () => {
@@ -77,6 +77,11 @@ describe('Utilities tests', () => {
         expect(parseBindingExpression((x: any) => x.name)).deep.to.equal({args: ['x'], body: 'x.name'});
         expect(parseBindingExpression((arg1: any) => arg1.contact.fullName.last))
             .deep.to.equal({args: ['arg1'], body: 'arg1.contact.fullName.last'});
+    });
+
+    it('Generates random hashes properly', () => {
+        expect(randomHash()).to.not.equal(randomHash());
+        expect(randomHash()).to.not.equal(randomHash());
     });
 
 });
